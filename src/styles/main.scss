@@ -1,0 +1,10 @@
+:root {
+	--fw-regular: 400;
+	--fw-bold: 700;
+}
+
+body {
+	font-family: "Josefin Sans", sans-serif;
+	font-size: 18px;
+	font-weight: var(--fw-regular);
+}
