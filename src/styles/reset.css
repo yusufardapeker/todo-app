@@ -34,5 +34,9 @@ button {
 	cursor: pointer;
 	background-color: transparent;
 	color: inherit;
-	font-weight: inherit;
+	font: inherit;
+}
+
+input {
+	font: inherit;
 }
