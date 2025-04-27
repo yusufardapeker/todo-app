@@ -5,6 +5,14 @@
 	--bright-blue: hsl(220, 98%, 61%);
 	--check-background: hsl(192, 100%, 67%), hsl(280, 87%, 65%);
 
+	--bg-main: hsl(236, 33%, 92%);
+	--bg-secondary: hsl(0, 0%, 98%);
+	--heading-color: hsl(0, 0%, 98%);
+	--text-color: hsl(235, 19%, 35%);
+	--text-secondary-color: hsl(236, 9%, 61%);
+	--completed-text-color: hsl(233, 11%, 84%);
+	--border-color: hsl(236, 33%, 92%);
+
 	&:has([data-theme="light"]) {
 		color-scheme: light;
 
