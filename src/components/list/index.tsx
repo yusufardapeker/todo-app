@@ -20,7 +20,6 @@ function List() {
 	useEffect(() => {
 		const stateButtonElements: NodeListOf<Element> =
 			document.querySelectorAll(".todo-states button");
-
 		setStateButtons(stateButtonElements);
 	}, [todos]);
 
@@ -31,30 +30,50 @@ function List() {
 	};
 
 	const handleShowAll = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+		const target: HTMLElement = e.target as HTMLElement;
+
 		dispatch(showAllTodos());
 
 		stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-		e.target.classList.add("selected");
+		target.classList.add("selected");
 	};
 
 	const handleShowActive = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+		const target: HTMLElement = e.target as HTMLElement;
+
 		if (activeTodos.length > 0) {
 			dispatch(showActiveTodos());
 			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-			e.target.classList.add("selected");
+			target.classList.add("selected");
 		} else {
 			alert("There is no active todo");
 		}
 	};
 
 	const handleShowCompleted = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+		const target: HTMLElement = e.target as HTMLElement;
+
 		if (hasCompleted) {
 			dispatch(showCompletedTodos());
 			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-			e.target.classList.add("selected");
+			target.classList.add("selected");
 		} else {
 			alert("There is no completed todo");
 		}
+	};
+
+	const handleClearCompleted = (): void => {
+		dispatch(clearCompleted());
+
+		stateButtons?.forEach((button, index, array) => {
+			if (button.classList.value.includes("btn-completed selected")) {
+				button.classList.remove("selected");
+
+				array.forEach(
+					(button) => button.classList.value.includes("btn-all") && button.classList.add("selected")
+				);
+			}
+		});
 	};
 
 	return (
@@ -86,19 +105,20 @@ function List() {
 					<div className="todo-actions mobile">
 						<div className="todo-info">
 							<p className="item-left">{activeTodos.length} items left</p>
-							<button className="clear-btn" onClick={() => dispatch(clearCompleted())}>
+							<button className="clear-btn" onClick={() => handleClearCompleted()}>
 								Clear Completed
 							</button>
 						</div>
 
 						<div className="todo-states">
 							<button
-								className="selected"
+								className="btn-all selected"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleShowAll(e)}
 							>
 								All
 							</button>
 							<button
+								className="btn-active"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 									handleShowActive(e)
 								}
@@ -106,6 +126,7 @@ function List() {
 								Active
 							</button>
 							<button
+								className="btn-completed"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 									handleShowCompleted(e)
 								}
@@ -120,12 +141,13 @@ function List() {
 
 						<div className="todo-states">
 							<button
-								className="selected"
+								className="btn-all selected"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleShowAll(e)}
 							>
 								All
 							</button>
 							<button
+								className="btn-active"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 									handleShowActive(e)
 								}
@@ -133,6 +155,7 @@ function List() {
 								Active
 							</button>
 							<button
+								className="btn-completed"
 								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
 									handleShowCompleted(e)
 								}
@@ -141,12 +164,12 @@ function List() {
 							</button>
 						</div>
 
-						<button className="clear-btn" onClick={() => dispatch(clearCompleted())}>
+						<button className="clear-btn" onClick={() => handleClearCompleted()}>
 							Clear Completed
 						</button>
 					</div>
 
-					<p className="drag-drop-text">Drag and drop to reorder list</p>
+					{/* <p className="drag-drop-text">Drag and drop to reorder list</p> */}
 				</>
 			)}
 		</div>
