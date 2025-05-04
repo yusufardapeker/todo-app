@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { CompleteTodoPayload, TodoStates } from "../types";
+import { EditTodoPayload, CompleteTodoPayload, TodoStates } from "../types";
 
 const initialState: TodoStates = {
 	todos: [],
@@ -19,6 +19,7 @@ export const todoSlice = createSlice({
 					id: Math.floor(Math.random() * 99999999).toString(),
 					content: action.payload,
 					completed: false,
+					isEditing: false,
 				},
 				...state.todos,
 			];
@@ -60,6 +61,40 @@ export const todoSlice = createSlice({
 			state.hasCompleted = state.allTodos.some((todo) => todo.completed === true);
 		},
 
+		showEditTodo: (state, action: PayloadAction<string>) => {
+			state.todos = state.todos.map((todo) =>
+				todo.id === action.payload
+					? {
+							...todo,
+							isEditing: true,
+					  }
+					: todo
+			);
+		},
+
+		hideEditTodo: (state) => {
+			state.todos = state.todos.map((todo) => {
+				return {
+					...todo,
+					isEditing: false,
+				};
+			});
+		},
+
+		editTodo: (state, action: PayloadAction<EditTodoPayload>) => {
+			const { todoId, editedTodoContent } = action.payload;
+
+			state.todos = state.todos.map((todo) =>
+				todo.id === todoId
+					? {
+							...todo,
+							content: editedTodoContent,
+							isEditing: false,
+					  }
+					: todo
+			);
+		},
+
 		showAllTodos: (state) => {
 			state.todos = state.allTodos;
 		},
@@ -84,6 +119,9 @@ export const {
 	createNewTodo,
 	deleteTodo,
 	completeTodo,
+	showEditTodo,
+	hideEditTodo,
+	editTodo,
 	showAllTodos,
 	showActiveTodos,
 	showCompletedTodos,

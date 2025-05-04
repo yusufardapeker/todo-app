@@ -6,6 +6,7 @@ export interface Todo {
 	id: string;
 	content: string;
 	completed: boolean;
+	isEditing: boolean;
 }
 export interface TodoStates {
 	todos: Todo[];
@@ -17,4 +18,9 @@ export interface TodoStates {
 export interface CompleteTodoPayload {
 	todoId: string;
 	targetChecked: boolean;
+}
+
+export interface EditTodoPayload {
+	todoId: string;
+	editedTodoContent: string;
 }
