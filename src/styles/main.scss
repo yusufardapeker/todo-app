@@ -54,6 +54,32 @@ body {
 	z-index: 1;
 }
 
+.popup {
+	position: fixed;
+	z-index: 2;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	border: 1px solid var(--bright-blue);
+	border-radius: 6px;
+	background-color: var(--bg-main);
+	color: var(--text-color);
+	padding: 16px;
+	width: 28ch;
+	animation: popupAnimation 300ms ease-out;
+}
+
+@keyframes popupAnimation {
+	from {
+		transform: translate(-50%, -50%) scale(0.6);
+	}
+
+	to {
+		transform: translate(-50%, -50%) scale(1);
+	}
+}
+
 @mixin elementWrapper($padding-left) {
 	padding-left: $padding-left;
 	padding-right: 16px;
@@ -136,9 +162,36 @@ body {
 		border-radius: 6px 6px 0 0;
 		border-bottom: 1px solid var(--border-color);
 		color: var(--text-color);
+		position: relative;
 
 		&:first-child ~ .todo-item {
 			border-radius: 0;
+		}
+
+		.edit-todo-input {
+			background-color: var(--bg-secondary);
+			caret-color: var(--bright-blue);
+			width: 28ch;
+			color: var(--text-color);
+		}
+
+		.three-dot {
+			margin-left: auto;
+		}
+
+		.todo-options {
+			position: absolute;
+			top: -12px;
+			right: 2px;
+			background-color: var(--bg-secondary);
+			padding: 4px;
+			border-radius: 4px;
+			display: none;
+
+			&.active {
+				display: flex;
+				gap: 4px;
+			}
 		}
 
 		input[type="checkbox"] {
@@ -170,13 +223,9 @@ body {
 
 		label {
 			cursor: pointer;
-		}
-
-		.cross-icon {
-			width: 14px;
-			height: 14px;
-			margin-left: auto;
-			cursor: pointer;
+			max-width: 30ch;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 
@@ -235,6 +284,10 @@ body {
 		margin-top: -220px;
 	}
 
+	.popup {
+		font-size: 20px;
+	}
+
 	.head {
 		margin-bottom: 24px;
 		gap: 36px;
@@ -272,9 +325,14 @@ body {
 				margin-right: 24px;
 			}
 
-			.cross-icon {
-				width: 16px;
-				height: 16px;
+			.todo-options {
+				top: -16px;
+				right: 6px;
+
+				svg {
+					width: 22px;
+					height: 22px;
+				}
 			}
 		}
 
