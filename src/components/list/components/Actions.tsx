@@ -139,8 +139,6 @@ function Actions() {
 							Clear Completed
 						</button>
 					</div>
-
-					<p className="drag-drop-text">Drag and drop to reorder list</p>
 				</>
 			)}
 		</div>
