@@ -24,3 +24,8 @@ export interface EditTodoPayload {
 	todoId: string;
 	editedTodoContent: string;
 }
+
+export interface ModalStates {
+	popupDisplay: boolean;
+	popupMessage: string;
+}

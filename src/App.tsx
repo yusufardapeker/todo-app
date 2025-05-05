@@ -11,6 +11,7 @@ import desktopDarkBgImage from "./images/bg-desktop-dark.jpg";
 
 import { Head } from "./components/head";
 import { List } from "./components/list";
+import { Popup } from "./components/Popup";
 
 function App() {
 	const { currentTheme } = useSelector((state: RootState) => state.theme);
@@ -29,6 +30,8 @@ function App() {
 			</picture>
 
 			<div className="container">
+				<Popup />
+
 				<Head />
 				<List />
 			</div>

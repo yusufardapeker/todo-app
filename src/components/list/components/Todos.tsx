@@ -13,6 +13,7 @@ import {
 	showEditTodo,
 	hideEditTodo,
 } from "../../../store/todoSlice";
+import { showPopup } from "../../../store/modalSlice";
 
 function Todos() {
 	const { todos } = useSelector((state: RootState) => state.todo);
@@ -36,7 +37,7 @@ function Todos() {
 
 	const handleEditTodo = (todoId: string, editedTodoContent: string): void => {
 		if (editedTodoContent.trim() === "") {
-			alert("sence mantıklı mı kanka");
+			dispatch(showPopup("Todo can not be empty"));
 		} else {
 			dispatch(editTodo({ todoId, editedTodoContent }));
 			todoOptionsRef.current.forEach((options) => options?.classList.remove("active"));

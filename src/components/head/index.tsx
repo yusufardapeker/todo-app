@@ -6,6 +6,7 @@ import moonIcon from "../../images/icon-moon.svg";
 import sunIcon from "../../images/icon-sun.svg";
 import { createNewTodo } from "../../store/todoSlice";
 import { useState } from "react";
+import { showPopup } from "../../store/modalSlice";
 
 function Head() {
 	const { currentTheme } = useSelector((state: RootState) => state.theme);
@@ -16,10 +17,12 @@ function Head() {
 	const handleNewTodo = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (newTodo.trim() === "") return;
-
-		dispatch(createNewTodo(newTodo));
-		setNewTodo("");
+		if (newTodo.trim() === "") {
+			dispatch(showPopup("Todo can not be empty"));
+		} else {
+			dispatch(createNewTodo(newTodo));
+			setNewTodo("");
+		}
 	};
 
 	return (

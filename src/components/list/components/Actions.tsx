@@ -8,6 +8,7 @@ import {
 	showAllTodos,
 	showCompletedTodos,
 } from "../../../store/todoSlice";
+import { showPopup } from "../../../store/modalSlice";
 
 function Actions() {
 	const { todos, activeTodos, hasCompleted } = useSelector((state: RootState) => state.todo);
@@ -38,7 +39,7 @@ function Actions() {
 			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
 			target.classList.add("selected");
 		} else {
-			alert("There is no active todo");
+			dispatch(showPopup("There is no active todo"));
 		}
 	};
 
@@ -50,7 +51,7 @@ function Actions() {
 			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
 			target.classList.add("selected");
 		} else {
-			alert("There is no completed todo");
+			dispatch(showPopup("There is no completed todo"));
 		}
 	};
 
