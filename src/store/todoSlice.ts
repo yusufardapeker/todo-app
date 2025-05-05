@@ -93,6 +93,16 @@ export const todoSlice = createSlice({
 					  }
 					: todo
 			);
+
+			state.allTodos = state.allTodos.map((todo) =>
+				todo.id === todoId
+					? {
+							...todo,
+							content: editedTodoContent,
+							isEditing: false,
+					  }
+					: todo
+			);
 		},
 
 		showAllTodos: (state) => {
@@ -100,7 +110,7 @@ export const todoSlice = createSlice({
 		},
 
 		showActiveTodos: (state) => {
-			state.todos = state.activeTodos;
+			state.todos = state.allTodos.filter((todo) => todo.completed === false);
 		},
 
 		showCompletedTodos: (state) => {
