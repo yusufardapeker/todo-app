@@ -177,6 +177,7 @@ body {
 
 		.three-dot {
 			margin-left: auto;
+			cursor: pointer;
 		}
 
 		.todo-options {
@@ -187,6 +188,10 @@ body {
 			padding: 4px;
 			border-radius: 4px;
 			display: none;
+
+			svg {
+				cursor: pointer;
+			}
 
 			&.active {
 				display: flex;
