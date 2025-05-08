@@ -58,7 +58,7 @@ function Actions() {
 	const handleClearCompleted = (): void => {
 		dispatch(clearCompleted());
 
-		stateButtons?.forEach((button, index, array) => {
+		stateButtons?.forEach((button, _index, array) => {
 			if (button.classList.value.includes("btn-completed selected")) {
 				button.classList.remove("selected");
 
