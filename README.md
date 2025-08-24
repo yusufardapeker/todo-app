@@ -1,8 +1,10 @@
 # Frontend Mentor - Todo app solution
 
+### Links
+
 This is a solution to the [Todo app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/todo-app-Su1_KokOW).
 
-[The Website](https://todo-app5039.netlify.app/)
+Live Site URL: [The Website](https://todo-app5039.netlify.app/)
 
 ### Built with
 
