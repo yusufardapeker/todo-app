@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { EditTodoPayload, CompleteTodoPayload, TodoStates, Todo } from "../types";
+import { EditTodoPayload, CompleteTodoPayload, TodoStates, Todo, reorderTodoPayload } from "../types";
 import { RootState } from "../store";
+import { arrayMove } from "@dnd-kit/sortable";
 
 const initialState: TodoStates = {
 	todos: [],
@@ -22,6 +23,10 @@ export const todoSlice = createSlice({
 				},
 				...state.todos,
 			];
+		},
+
+		reorderTodos: (state, action: PayloadAction<reorderTodoPayload>) => {
+			state.todos = arrayMove(state.todos, action.payload.oldIndex, action.payload.newIndex);
 		},
 
 		deleteTodo: (state, action: PayloadAction<string>) => {
@@ -91,6 +96,7 @@ export const {
 	editTodo,
 	clearCompleted,
 	setFilter,
+	reorderTodos,
 } = todoSlice.actions;
 
 export default todoSlice.reducer;

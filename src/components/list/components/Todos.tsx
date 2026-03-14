@@ -11,15 +11,44 @@ import {
 	selectShowedTodos,
 	setFilter,
 	showEditTodo,
+	reorderTodos,
 } from "../../../store/todoSlice";
 import { TodoItem } from "./TodoItem";
 import { showPopup } from "../../../store/modalSlice";
+
+import {
+	DndContext,
+	closestCenter,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+	DragEndEvent,
+} from "@dnd-kit/core";
+
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 function Todos() {
 	const showedTodos = useSelector((state: RootState) => selectShowedTodos(state));
 	const dispatch = useDispatch();
 	const [selectedTodoOption, setSelectedTodoOption] = useState<string | null>(null);
 	const [editedTodoContent, setEditedTodoContent] = useState<string>("");
+
+	const sensors = useSensors(
+		useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), // Yanlışlıkla sürüklemeyi önlemek için 5px tolerans
+		useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+	);
+
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+
+		if (over && active.id !== over.id) {
+			const oldIndex = showedTodos.findIndex((t) => t.id === active.id);
+			const newIndex = showedTodos.findIndex((t) => t.id === over.id);
+
+			dispatch(reorderTodos({ oldIndex, newIndex }));
+		}
+	};
 
 	const handleCompleteTodo = (todoID: string, targetChecked: boolean) => {
 		if (showedTodos.length === 1) {
@@ -54,23 +83,28 @@ function Todos() {
 	};
 
 	return (
-		<div className="todo-wrapper">
-			{showedTodos.map((todo) => (
-				<TodoItem
-					key={todo.id}
-					todo={todo}
-					onComplete={handleCompleteTodo}
-					showEditTodo={handleShowEditTodo}
-					onEdit={handleEditTodo}
-					setEditedTodoContent={setEditedTodoContent}
-					editedTodoContent={editedTodoContent}
-					deleteTodo={() => dispatch(deleteTodo(todo.id))}
-					selectTodoOptions={handleSelectTodoOptions}
-					isOptionSelected={todo.id === selectedTodoOption}
-					hideSelectedTodoOption={hideSelectedTodoOption}
-				/>
-			))}
-		</div>
+		<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+			<div className="todo-wrapper">
+				<SortableContext items={showedTodos.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+					{showedTodos.map((todo) => (
+						<TodoItem
+							key={todo.id}
+							id={todo.id}
+							todo={todo}
+							onComplete={handleCompleteTodo}
+							showEditTodo={handleShowEditTodo}
+							onEdit={handleEditTodo}
+							setEditedTodoContent={setEditedTodoContent}
+							editedTodoContent={editedTodoContent}
+							deleteTodo={() => dispatch(deleteTodo(todo.id))}
+							selectTodoOptions={handleSelectTodoOptions}
+							isOptionSelected={todo.id === selectedTodoOption}
+							hideSelectedTodoOption={hideSelectedTodoOption}
+						/>
+					))}
+				</SortableContext>
+			</div>
+		</DndContext>
 	);
 }
 

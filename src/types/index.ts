@@ -36,6 +36,7 @@ export interface filterButtons {
 
 export interface todoItemProps {
 	todo: Todo;
+	id: string;
 	onComplete: (todoID: string, targetChecked: boolean) => void;
 	showEditTodo: (todoID: string, todoContent: string) => void;
 	onEdit: (todoID: string, editedTodoContent: string) => void;
@@ -45,4 +46,9 @@ export interface todoItemProps {
 	selectTodoOptions: (todoID: string) => void;
 	isOptionSelected: boolean;
 	hideSelectedTodoOption: () => void;
+}
+
+export interface reorderTodoPayload {
+	oldIndex: number;
+	newIndex: number;
 }

@@ -6,6 +6,8 @@ function List() {
 		<div className="list">
 			<Todos />
 			<Actions />
+
+			<p className="dnd-text">Drag and drop to reorder list</p>
 		</div>
 	);
 }

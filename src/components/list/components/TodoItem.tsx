@@ -7,6 +7,9 @@ import clsx from "clsx";
 
 import { todoItemProps } from "../../../types";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 function TodoItem({
 	todo,
 	onComplete,
@@ -20,6 +23,17 @@ function TodoItem({
 	hideSelectedTodoOption,
 }: todoItemProps) {
 	const optionRef = useRef<HTMLDivElement>(null);
+
+	const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+		id: todo.id,
+	});
+
+	const style = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+		opacity: isDragging ? 0.5 : 1, // Sürüklenirken şeffaflaşma efekti
+		cursor: "grab",
+	};
 
 	useEffect(() => {
 		if (!isOptionSelected) return;
@@ -35,7 +49,7 @@ function TodoItem({
 	}, [isOptionSelected]);
 
 	return (
-		<div className="todo-item">
+		<div className="todo-item" ref={setNodeRef} style={style} {...attributes} {...listeners}>
 			<input
 				type="checkbox"
 				className="complete-todo-input"
