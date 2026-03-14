@@ -4,7 +4,7 @@ import { changeTheme } from "../../store/themeSlice";
 
 import moonIcon from "../../images/icon-moon.svg";
 import sunIcon from "../../images/icon-sun.svg";
-import { createNewTodo } from "../../store/todoSlice";
+import { createNewTodo, setFilter } from "../../store/todoSlice";
 import { useState } from "react";
 import { showPopup } from "../../store/modalSlice";
 
@@ -20,6 +20,7 @@ function Head() {
 		if (newTodo.trim() === "") {
 			dispatch(showPopup("Todo can not be empty"));
 		} else {
+			dispatch(setFilter("all"));
 			dispatch(createNewTodo(newTodo));
 			setNewTodo("");
 		}
@@ -29,22 +30,17 @@ function Head() {
 		<div className="head">
 			<div className="heading-theme-wrapper">
 				<h1>todo</h1>
-				<img
-					src={currentTheme === "dark" ? sunIcon : moonIcon}
-					alt="sun-icon"
-					className="theme-icon"
-					onClick={() => dispatch(changeTheme())}
-				/>
+
+				<button className="change-theme-button" aria-label="Change theme" onClick={() => dispatch(changeTheme())}>
+					<img src={currentTheme === "dark" ? sunIcon : moonIcon} alt="" className="theme-icon" />
+				</button>
 			</div>
 
-			<form
-				className="input-wrapper"
-				onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleNewTodo(e)}
-			>
+			<form className="create-todo-form" onSubmit={handleNewTodo}>
 				<input
 					type="text"
 					placeholder="Create a new todo..."
-					className="todo-input"
+					className="create-todo-input"
 					onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTodo(e.target.value)}
 					value={newTodo}
 				/>

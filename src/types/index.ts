@@ -10,22 +10,39 @@ export interface Todo {
 }
 export interface TodoStates {
 	todos: Todo[];
-	activeTodos: Todo[];
-	allTodos: Todo[];
-	hasCompleted: boolean;
+	filter: "all" | "active" | "completed";
 }
 
 export interface CompleteTodoPayload {
-	todoId: string;
+	todoID: string;
 	targetChecked: boolean;
 }
 
 export interface EditTodoPayload {
-	todoId: string;
+	todoID: string;
 	editedTodoContent: string;
 }
 
 export interface ModalStates {
-	popupDisplay: boolean;
+	showPopup: boolean;
 	popupMessage: string;
+}
+
+export interface filterButtons {
+	id: string;
+	className: string;
+	textContent: string;
+}
+
+export interface todoItemProps {
+	todo: Todo;
+	onComplete: (todoID: string, targetChecked: boolean) => void;
+	showEditTodo: (todoID: string, todoContent: string) => void;
+	onEdit: (todoID: string, editedTodoContent: string) => void;
+	setEditedTodoContent: React.Dispatch<React.SetStateAction<string>>;
+	editedTodoContent: string;
+	deleteTodo: () => void;
+	selectTodoOptions: (todoID: string) => void;
+	isOptionSelected: boolean;
+	hideSelectedTodoOption: () => void;
 }

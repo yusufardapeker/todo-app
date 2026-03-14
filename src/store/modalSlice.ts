@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ModalStates } from "../types";
 
 const initialState: ModalStates = {
-	popupDisplay: false,
+	showPopup: false,
 	popupMessage: "",
 };
 
@@ -11,12 +11,12 @@ export const modalSlice = createSlice({
 	initialState,
 	reducers: {
 		showPopup(state, action: PayloadAction<string>) {
-			state.popupDisplay = true;
+			state.showPopup = true;
 			state.popupMessage = action.payload;
 		},
 
 		hidePopup(state) {
-			state.popupDisplay = false;
+			state.showPopup = false;
 		},
 	},
 });

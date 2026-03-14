@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { EditTodoPayload, CompleteTodoPayload, TodoStates } from "../types";
+import { EditTodoPayload, CompleteTodoPayload, TodoStates, Todo } from "../types";
+import { RootState } from "../store";
 
 const initialState: TodoStates = {
 	todos: [],
-	activeTodos: [],
-	allTodos: [],
-	hasCompleted: false,
+	filter: "all",
 };
 
 export const todoSlice = createSlice({
@@ -16,114 +15,72 @@ export const todoSlice = createSlice({
 		createNewTodo: (state, action: PayloadAction<string>) => {
 			state.todos = [
 				{
-					id: Math.floor(Math.random() * 99999999).toString(),
+					id: crypto.randomUUID(),
 					content: action.payload,
 					completed: false,
 					isEditing: false,
 				},
 				...state.todos,
 			];
-
-			state.allTodos = state.todos;
-			state.activeTodos = state.todos;
 		},
 
 		deleteTodo: (state, action: PayloadAction<string>) => {
 			state.todos = state.todos.filter((todo) => todo.id !== action.payload);
-
-			state.allTodos = state.todos;
-			state.activeTodos = state.allTodos.filter((todo) => todo.completed === false);
-			state.hasCompleted = state.allTodos.some((todo) => todo.completed === true);
 		},
 
 		completeTodo: (state, action: PayloadAction<CompleteTodoPayload>) => {
-			const { todoId, targetChecked } = action.payload;
+			const { todoID, targetChecked } = action.payload;
 
-			state.todos = state.todos.map((todo) =>
-				todo.id === todoId
-					? {
-							...todo,
-							completed: targetChecked,
-					  }
-					: todo
-			);
+			const targetTodo = state.todos.find((todo) => todo.id === todoID);
 
-			state.allTodos = state.allTodos.map((todo) =>
-				todo.id === todoId
-					? {
-							...todo,
-							completed: targetChecked,
-					  }
-					: todo
-			);
-
-			state.activeTodos = state.allTodos.filter((todo) => todo.completed === false);
-			state.hasCompleted = state.allTodos.some((todo) => todo.completed === true);
+			if (targetTodo) targetTodo.completed = targetChecked;
 		},
 
 		showEditTodo: (state, action: PayloadAction<string>) => {
-			state.todos = state.todos.map((todo) =>
-				todo.id === action.payload
-					? {
-							...todo,
-							isEditing: true,
-					  }
-					: todo
-			);
+			const targetTodo = state.todos.find((todo) => todo.id === action.payload);
+
+			if (targetTodo) targetTodo.isEditing = true;
 		},
 
 		hideEditTodo: (state) => {
-			state.todos = state.todos.map((todo) => {
-				return {
-					...todo,
-					isEditing: false,
-				};
-			});
+			state.todos.forEach((todo) => (todo.isEditing = false));
 		},
 
 		editTodo: (state, action: PayloadAction<EditTodoPayload>) => {
-			const { todoId, editedTodoContent } = action.payload;
+			const { todoID, editedTodoContent } = action.payload;
 
-			state.todos = state.todos.map((todo) =>
-				todo.id === todoId
-					? {
-							...todo,
-							content: editedTodoContent,
-							isEditing: false,
-					  }
-					: todo
-			);
+			const targetTodo = state.todos.find((todo) => todo.id === todoID);
 
-			state.allTodos = state.allTodos.map((todo) =>
-				todo.id === todoId
-					? {
-							...todo,
-							content: editedTodoContent,
-							isEditing: false,
-					  }
-					: todo
-			);
+			if (targetTodo) {
+				targetTodo.content = editedTodoContent;
+				targetTodo.isEditing = false;
+			}
 		},
 
-		showAllTodos: (state) => {
-			state.todos = state.allTodos;
-		},
-
-		showActiveTodos: (state) => {
-			state.todos = state.allTodos.filter((todo) => todo.completed === false);
-		},
-
-		showCompletedTodos: (state) => {
-			state.todos = state.allTodos.filter((todo) => todo.completed === true);
+		setFilter: (state, action: PayloadAction<"all" | "active" | "completed">) => {
+			state.filter = action.payload;
 		},
 
 		clearCompleted: (state) => {
-			state.todos = state.activeTodos;
-			state.allTodos = state.activeTodos;
-			state.hasCompleted = false;
+			state.todos = state.todos.filter((todo) => todo.completed === false);
 		},
 	},
 });
+
+export const selectShowedTodos = (state: RootState) => {
+	const { todos, filter } = state.todo;
+
+	switch (filter) {
+		case "active":
+			return todos.filter((todo: Todo) => todo.completed === false);
+
+		case "completed":
+			return todos.filter((todo: Todo) => todo.completed === true);
+
+		default:
+			return todos;
+	}
+};
 
 export const {
 	createNewTodo,
@@ -132,10 +89,8 @@ export const {
 	showEditTodo,
 	hideEditTodo,
 	editTodo,
-	showAllTodos,
-	showActiveTodos,
-	showCompletedTodos,
 	clearCompleted,
+	setFilter,
 } = todoSlice.actions;
 
 export default todoSlice.reducer;

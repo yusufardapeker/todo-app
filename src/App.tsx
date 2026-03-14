@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store";
 
 import "./styles/reset.css";
-import "./styles/main.scss";
+import "./styles/main.css";
 
 import mobileLightBgImage from "./images/bg-mobile-light.jpg";
 import mobileDarkBgImage from "./images/bg-mobile-dark.jpg";
@@ -24,8 +24,9 @@ function App() {
 					srcSet={currentTheme === "dark" ? desktopDarkBgImage : desktopLightBgImage}
 				/>
 				<img
+					className="background-image"
 					src={currentTheme === "dark" ? mobileDarkBgImage : mobileLightBgImage}
-					alt="background image"
+					alt=""
 				/>
 			</picture>
 

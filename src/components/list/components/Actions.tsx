@@ -1,141 +1,101 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import clsx from "clsx";
 
 import { RootState } from "../../../store";
-import {
-	clearCompleted,
-	showActiveTodos,
-	showAllTodos,
-	showCompletedTodos,
-} from "../../../store/todoSlice";
+import { filterButtons } from "../../../types";
+import { clearCompleted, setFilter } from "../../../store/todoSlice";
 import { showPopup } from "../../../store/modalSlice";
 
 function Actions() {
-	const { todos, activeTodos, hasCompleted } = useSelector((state: RootState) => state.todo);
+	const todos = useSelector((state: RootState) => state.todo.todos);
+	const activeFilter = useSelector((state: RootState) => state.todo.filter);
 	const dispatch = useDispatch();
 
-	const [stateButtons, setStateButtons] = useState<NodeListOf<Element>>();
-
-	useEffect(() => {
-		const stateButtonElements: NodeListOf<Element> =
-			document.querySelectorAll(".todo-states button");
-		setStateButtons(stateButtonElements);
+	const { activeTodoCount, hasCompleted } = useMemo(() => {
+		return {
+			activeTodoCount: todos.filter((todo) => todo.completed === false).length,
+			hasCompleted: todos.some((todo) => todo.completed === true),
+		};
 	}, [todos]);
 
-	const handleShowAll = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-		const target: HTMLElement = e.target as HTMLElement;
-
-		dispatch(showAllTodos());
-
-		stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-		target.classList.add("selected");
-	};
-
-	const handleShowActive = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-		const target: HTMLElement = e.target as HTMLElement;
-
-		if (activeTodos.length > 0) {
-			dispatch(showActiveTodos());
-			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-			target.classList.add("selected");
-		} else {
-			dispatch(showPopup("There is no active todo"));
+	const handleFilterChange = (filterType: "all" | "active" | "completed") => {
+		if (filterType === "active" && activeTodoCount === 0) {
+			return dispatch(showPopup("There is no active todos"));
 		}
-	};
-
-	const handleShowCompleted = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-		const target: HTMLElement = e.target as HTMLElement;
-
-		if (hasCompleted) {
-			dispatch(showCompletedTodos());
-			stateButtons?.forEach((todo) => todo.classList.remove("selected"));
-			target.classList.add("selected");
-		} else {
-			dispatch(showPopup("There is no completed todo"));
+		if (filterType === "completed" && !hasCompleted) {
+			return dispatch(showPopup("There is no completed todo"));
 		}
+		dispatch(setFilter(filterType));
 	};
 
-	const handleClearCompleted = (): void => {
+	const handleClear = () => {
 		dispatch(clearCompleted());
-
-		stateButtons?.forEach((button, _index, array) => {
-			if (button.classList.value.includes("btn-completed selected")) {
-				button.classList.remove("selected");
-
-				array.forEach(
-					(button) => button.classList.value.includes("btn-all") && button.classList.add("selected")
-				);
-			}
-		});
+		if (activeFilter === "completed") {
+			dispatch(setFilter("all"));
+		}
 	};
+
+	const filterButtons: filterButtons[] = [
+		{ id: "all", className: "btn-all", textContent: "All" },
+		{ id: "active", className: "btn-active", textContent: "Active" },
+		{
+			id: "completed",
+			className: "btn-completed",
+			textContent: "Completed",
+		},
+	];
 
 	return (
-		<div className="actions">
+		<div className="todo-actions">
 			{todos.length > 0 && (
 				<>
-					<div className="todo-actions mobile">
-						<div className="todo-info">
-							<p className="item-left">{activeTodos.length} items left</p>
-							<button className="clear-btn" onClick={() => handleClearCompleted()}>
+					<div className="todo-actions-mobile">
+						<div className="stat-and-clear">
+							<p className="item-left">
+								<span className="active-todos-count">{activeTodoCount}</span> items left
+							</p>
+
+							<button className="clear-completed-button" onClick={handleClear}>
 								Clear Completed
 							</button>
 						</div>
 
 						<div className="todo-states">
-							<button
-								className="btn-all selected"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleShowAll(e)}
-							>
-								All
-							</button>
-							<button
-								className="btn-active"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-									handleShowActive(e)
-								}
-							>
-								Active
-							</button>
-							<button
-								className="btn-completed"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-									handleShowCompleted(e)
-								}
-							>
-								Completed
-							</button>
+							{filterButtons.map((button) => (
+								<button
+									key={button.id}
+									className={clsx(button.className, {
+										active: button.id === activeFilter,
+									})}
+									onClick={() => handleFilterChange(button.id as any)}
+								>
+									{button.textContent}
+								</button>
+							))}
 						</div>
 					</div>
 
-					<div className="todo-actions desktop">
-						<p className="item-left">{activeTodos.length} items left</p>
+					<div className="todo-actions-desktop">
+						<p className="item-left">
+							<span className="active-todos-count">{activeTodoCount}</span> items left
+						</p>
 
 						<div className="todo-states">
-							<button
-								className="btn-all selected"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => handleShowAll(e)}
-							>
-								All
-							</button>
-							<button
-								className="btn-active"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-									handleShowActive(e)
-								}
-							>
-								Active
-							</button>
-							<button
-								className="btn-completed"
-								onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-									handleShowCompleted(e)
-								}
-							>
-								Completed
-							</button>
+							{filterButtons.map((button) => (
+								<button
+									key={button.id}
+									className={clsx(button.className, {
+										active: button.id === activeFilter,
+									})}
+									onClick={() => handleFilterChange(button.id as any)}
+								>
+									{button.textContent}
+								</button>
+							))}
 						</div>
 
-						<button className="clear-btn" onClick={() => handleClearCompleted()}>
+						<button className="clear-completed-button" onClick={handleClear}>
 							Clear Completed
 						</button>
 					</div>
