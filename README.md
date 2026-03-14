@@ -1,40 +1,45 @@
 # Frontend Mentor - Todo app solution
 
-### Links
+This is my solution to the **Todo App** challenge on Frontend Mentor.
 
-This is a solution to the [Todo app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/todo-app-Su1_KokOW).
+### 🔗 Links
 
-Live Site URL: [The Website](https://todo-app5039.netlify.app/)
+👉 **[Go Live Site](https://todo-app5039.netlify.app/)** <br>
+👉 **[Visit Challenge](https://www.frontendmentor.io/challenges/todo-app-Su1_KokOW)**
 
-### Built with
+## 🛠️ Built With
 
-- SASS
-- React
-- TypeScript
-- Redux Toolkit
-- Mobile-first workflow
+- **React**
+- **Redux Toolkit**
+- **Mobile-first workflow**
 
-I don't have the figma file so it is not pixel perfect. I have tried to make similar as same as possible. The website is responsive only 1440px and 375px screen sizes. I'll be glad if you give me suggestion about mistakes, lackings and best practices and how can I fix it.
+### About The Project
 
-### Installation
+I don't have the actual design file so the layout is not pixel-perfect. The website is responsive only 1440px and 375px screen sizes. Implementation focuses on:
+
+- Clean and modern CSS
+- Good accessibility practices
+- Keyboard-friendly interactions
+
+## 🚀 Installation
 
 1. Clone the repository:
 
-```
-git clone <repository-url>
+```sh
+git clone https://github.com/yusufardapeker/todo-app.git
 cd todo-app
 ```
 
 2. Install dependencies:
 
-```
+```sh
 npm install
 ```
 
-3. Start development server
+3. Start the development server:
 
-```
+```sh
 npm run dev
 ```
 
-4. Go to http://localhost:5173
+4. Open your browser and go to http://localhost:5173
